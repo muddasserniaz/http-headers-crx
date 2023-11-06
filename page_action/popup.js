@@ -185,22 +185,22 @@ const HEADER_DESCRIPTIONS = {
   'x-frame-options': 'Indicates whether or not a browser should be allowed to render a page in a <frame>, <iframe> or <object>'
 }
 
-function copyToClipboard(domEl, rowEl, text) {
-  rowEl.classList.add('copy-hightlight');
+// function copyToClipboard(domEl, rowEl, text) {
+//   rowEl.classList.add('copy-hightlight');
 
-  const textArea = document.createElement('textarea');
-  textArea.value = text;
-  textArea.className = 'copy-buffer';
+//   const textArea = document.createElement('textarea');
+//   textArea.value = text;
+//   textArea.className = 'copy-buffer';
 
-  domEl.appendChild(textArea);
+//   domEl.appendChild(textArea);
 
-  textArea.select();
-  document.execCommand('copy');
+//   textArea.select();
+//   document.execCommand('copy');
 
-  domEl.removeChild(textArea);
+//   domEl.removeChild(textArea);
 
-  setTimeout(() => rowEl.classList.remove('copy-hightlight'), 500);
-}
+//   setTimeout(() => rowEl.classList.remove('copy-hightlight'), 500);
+// }
 
 function titleForHeader(name) {
   name = name.toLowerCase();
@@ -225,12 +225,14 @@ function buildTable(details, domEl) {
 
   // <caption>
   const elCaption = document.createElement('caption');
-  if (type === 'request') {
-    const text = `${details.method} – ${details.url}`;
-    elCaption.appendChild(document.createTextNode(text));
-  } else {
+  // if (type === 'request') {
+  //   const text = `${details.method} – ${details.url}`;
+  //   elCaption.appendChild(document.createTextNode(text));
+  // } else {
+  if (type === 'response') {    
     elCaption.className = `status-code-${details.statusCode}`
     elCaption.appendChild(document.createTextNode(details.statusLine));
+    console.log(details.statusLine);
   }
   elTable.appendChild(elCaption);
 
@@ -253,6 +255,7 @@ function buildTable(details, domEl) {
   // <tbody>
   const elTbody = document.createElement('tbody');
   for (let name of headerNames) {
+    
     const elTbodyTr = document.createElement('tr');
     const elTbodyTrTd1 = document.createElement('td');
     if (titleForHeader(name)) { elTbodyTrTd1.title = titleForHeader(name); }
@@ -263,9 +266,10 @@ function buildTable(details, domEl) {
     elTbodyTr.appendChild(elTbodyTrTd2);
     elTbody.appendChild(elTbodyTr);
 
-    elTbodyTr.addEventListener(CLICK, event => {
-      copyToClipboard(domEl, elTbodyTr, `${name}: ${headers[name]}`);
-    });
+      elTbodyTr.addEventListener(CLICK, event => {
+        // copyToClipboard(domEl, elTbodyTr, `${name}: ${headers[name]}`);
+      });
+    
   }
   elTable.appendChild(elTbody);
 }
